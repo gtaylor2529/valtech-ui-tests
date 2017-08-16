@@ -1,6 +1,5 @@
 package stepdefs;
 
-import cucumber.api.java.After;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import page_objects.CorePage;
@@ -8,12 +7,6 @@ import page_objects.GenericPage;
 import page_objects.HomePage;
 
 public class GenericStepDefs {
-
-    @After
-    public void tearDownBrowser() {
-        CorePage corePage = new CorePage();
-        corePage.tearDownDriver();
-    }
 
     @When("^I go to (.*)$")
     public void iGoTo(String url) throws Throwable {

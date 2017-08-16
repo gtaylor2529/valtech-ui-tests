@@ -1,9 +1,8 @@
 package page_objects;
 
-import driver.Setup;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import cucumber.api.Scenario;
+import driver.Properties;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -20,18 +19,21 @@ public class CorePage {
     private int explicitWaitTime = 20;
 
     public CorePage() {
-        this.driver = Setup.getDriver();
+        this.driver = Properties.getDriver();
     }
 
     public void navigateToUrl(String url) {
-        if (this.driver == null) {
-            this.driver = Setup.setDriver();
-        }
+        this.driver = Properties.setDriver();
         this.driver.get(url);
     }
 
-    public void tearDownDriver() {
-        this.driver = Setup.tearDownDriver();
+    public void tearDownDriver(Scenario scenario) {
+        if (scenario.isFailed()) {
+            final byte[] screenshot = ((TakesScreenshot) driver)
+                    .getScreenshotAs(OutputType.BYTES);
+            scenario.embed(screenshot, "image/jpeg");
+        }
+        this.driver.close();
     }
 
     public void navigateToRootElement() {
@@ -125,7 +127,7 @@ public class CorePage {
         boolean elementFound = false;
         Iterator elementList = this.elements.iterator();
         while (elementList.hasNext()) {
-            WebElement element = (WebElement)elementList.next();
+            WebElement element = (WebElement) elementList.next();
             if (element.getText().toLowerCase().equals(text.toLowerCase())) {
                 this.element = element;
                 elementFound = true;
